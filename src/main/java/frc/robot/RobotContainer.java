@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
 import choreo.auto.AutoChooser;
 
@@ -80,10 +81,19 @@ public class RobotContainer {
 
     public RobotContainer() {
 
+        // Register named commands
+        NamedCommands.registerCommand("marker1", Commands.print("Passed marker 1"));
+        NamedCommands.registerCommand("marker2", Commands.print("Passed marker 2"));
+        NamedCommands.registerCommand("Run Coral", new CoralRollerRun(objCoralRoller, MaxSpeed));
+
+        // Use event markers as triggers
+        new EventTrigger("Example Marker").whileTrue(new CoralRollerRun(objCoralRoller, MaxSpeed));
+
         // === PATHPLANNER === \\
         autoChooser = AutoBuilder.buildAutoChooser();
-        NamedCommands.registerCommand("CoralIntake", new CoralRollerRun(objCoralRoller, MaxSpeed));
         SmartDashboard.putData("Auto Chooser", autoChooser);
+       
+        
         
         configureBindings();
     }
@@ -114,10 +124,10 @@ public class RobotContainer {
             new TeleOpDrive(drivetrain, MaxSpeed, MaxAngularRate, ()-> -objDriverXbox.getLeftY(), ()-> -objDriverXbox.getLeftX() , ()-> -objDriverXbox.getRightX(), false)
         );
 
-        objDriverXbox.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        objDriverXbox.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-objDriverXbox.getLeftY(), -objDriverXbox.getLeftX()))
-        ));
+        // objDriverXbox.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // objDriverXbox.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-objDriverXbox.getLeftY(), -objDriverXbox.getLeftX()))
+        // ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -142,8 +152,8 @@ public class RobotContainer {
        objDriverXbox.rightBumper().whileTrue(new AutoDriveToAprilTag(drivetrain, MaxSpeed, MaxAngularRate));
 
        // === COPILOT COMMANDS === \\
-       objCoPilotXbox.a().whileTrue(new PivotRun(objPivot, -0.15));   //DOWN
-       objCoPilotXbox.x().whileTrue(new PivotRun(objPivot, 0.15));   //UP
+       objDriverXbox.a().whileTrue(new PivotRun(objPivot, -0.15));   //DOWN
+       objDriverXbox.b().whileTrue(new PivotRun(objPivot, 0.15));   //UP
        objCoPilotXbox.b().whileTrue(new AlgaeIntake(objAlgaeRoller, objAlgaeTopRoller, -0.55, -0.15));  //ball off reef
        objCoPilotXbox.y().whileTrue(new AlgaeIntake(objAlgaeRoller, objAlgaeTopRoller, 0.55, -0.15)); //ball off ground
        objCoPilotXbox.axisGreaterThan(5, 0.5).whileTrue(new ElevatorRun(objElevator, 0.5)); //up

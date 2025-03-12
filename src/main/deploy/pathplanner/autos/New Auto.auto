@@ -7,13 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "Part1"
           }
         },
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "CoralIntake"
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Part2"
           }
         }
       ]

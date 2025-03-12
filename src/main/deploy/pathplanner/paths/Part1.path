@@ -1,0 +1,118 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.19125,
+        "y": 0.7782499999999993
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.4240368852459016,
+        "y": 1.3056598360655745
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.2315,
+        "y": 1.5289999999999997
+      },
+      "prevControl": {
+        "x": 4.806909836065573,
+        "y": 1.5409877049180325
+      },
+      "nextControl": {
+        "x": 3.7405308000361988,
+        "y": 1.5187714750007537
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.5795,
+        "y": 1.2852499999999998
+      },
+      "prevControl": {
+        "x": 2.184,
+        "y": 0.4564999999999998
+      },
+      "nextControl": {
+        "x": 1.037909762220418,
+        "y": 2.0277527453429744
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.36925,
+        "y": 3.167
+      },
+      "prevControl": {
+        "x": 1.9694999999999998,
+        "y": 2.913499999999999
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Path One End"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": -125.00000000000001
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.8,
+      "maxWaypointRelativePos": 2.05,
+      "constraints": {
+        "maxVelocity": 0.4,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Example Marker",
+      "waypointRelativePos": 1.8593525179856116,
+      "endWaypointRelativePos": 2.139928057553946,
+      "command": null
+    },
+    {
+      "name": "Example Marker",
+      "waypointRelativePos": 3.0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 42.93988897627686
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

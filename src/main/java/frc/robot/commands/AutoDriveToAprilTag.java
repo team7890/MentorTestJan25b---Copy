@@ -4,10 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.LimelightHelpers;
+import frc.robot.UtilityFunctions;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -16,12 +18,16 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 //dControl = dError * dKp
 
 public class AutoDriveToAprilTag extends Command {
+
+  private double dPropPartTX, dIntPartTX, dPropPartTY, dIntPartTY;
   
   private final CommandSwerveDrivetrain objSwerve;
   // private final LimelightHelpers objLimelight = new LimelightHelpers();
   private final double dMaxSpeed;
   private final double dMaxAngularRate;
-  double dLimeTX, dError, dKp, dControl, dIntegral, dKi;
+
+
+  double dLimeTX, dErrorTX, dKpTX, dControlTX, dIntegralTX, dKiTX, dLimeTY, dErrorTY, dKpTY, dControlTY, dIntegralTY, dKiTY;
  
   private SwerveRequest.FieldCentric drive  = new SwerveRequest.FieldCentric()
   .withDeadband(0.0).withRotationalDeadband(0.0) // Add a 10% deadband
@@ -35,10 +41,12 @@ public class AutoDriveToAprilTag extends Command {
   /** Creates a new AutoDriveToAprilTag. */
   // public AutoDriveToAprilTag(CommandSwerveDrivetrain objSwerve_in, LimelightHelpers objLimelight_in) {
   public AutoDriveToAprilTag(CommandSwerveDrivetrain objSwerve_in, double dMaxSpeed_in, double dMaxAngularRate_in) {
+
     objSwerve = objSwerve_in;
     dMaxSpeed = dMaxSpeed_in;
     dMaxAngularRate = dMaxAngularRate_in;
-    
+
+
     addRequirements(objSwerve);
     // Use addRequirements() here to declare subsystem dependencies.
 
@@ -49,21 +57,43 @@ public class AutoDriveToAprilTag extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    dIntegral = 0.0;
+    dIntegralTX = 0.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // === LIMELIGHT ROTATIONAL === \\
     dLimeTX = LimelightHelpers.getTX("");
-    dError = dLimeTX - 0.0;   //TODO: Change if needed
-    dIntegral = dIntegral + dError;
-    dKi = 0.175/100.0;
-    dKp = 0.2/10.0;
-    dControl = -dError * dKp + -dIntegral * dKi;
+    dErrorTX = dLimeTX - 0.0;   //TODO: Change if needed
+    dIntegralTX = dIntegralTX + dErrorTX;
+    dIntegralTX = UtilityFunctions.limitVariable(-200.0, dIntegralTX, 200.0);
+    dKiTX = 0.15 / 200.0;
+    dKpTX = 0.45/25; //25 = farthest value from april tag
+    dPropPartTX = -dErrorTX * dKpTX;
+
+    dIntPartTX = -dIntegralTX * dKiTX;
+
+    dControlTX = dPropPartTX + dIntPartTX;
+      // === LIMELIGHT DISTANCE === \\
+    dLimeTY = LimelightHelpers.getTY("");
+    dErrorTY = dLimeTY - 0.0;
+    dIntegralTY = dIntegralTY + dErrorTY;
+    dIntegralTY = UtilityFunctions.limitVariable(-200.0, dIntegralTY, 200.0);
+    dKiTY = 0.10 / 200.0;
+    dKpTY = 0.45/25; //25 = farthest value from april tag
+    dPropPartTY = -dErrorTY * dKpTY;
+
+    dIntPartTY = -dIntegralTY * dKiTY;
+
+    dControlTY = dPropPartTY + dIntPartTY;
+
+    // dControl = -dError * dKp + -dIntegral * dKi;
+    SmartDashboard.putNumber("Proportional Limelight", dPropPartTX);
+    SmartDashboard.putNumber("Integral Limelight", dIntPartTX);
       
     objSwerve.setControl(
-          drive.withVelocityX(0.0).withVelocityY(0.0).withRotationalRate(dControl)
+          drive.withVelocityX(-dControlTY).withVelocityY(0.0).withRotationalRate(dControlTX)
       );
     
     // System.out.println("AutoDriveToAprilTag");
